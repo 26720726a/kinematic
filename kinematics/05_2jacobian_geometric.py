@@ -2,6 +2,55 @@ import math
 
 # transform_x, transform_y, transform_z, matrix_multiply는
 # 이미 만들어둔 것 그대로 사용
+def transform_x(theta, x, y, z):
+    c = math.cos(theta)
+    s = math.sin(theta)
+    return [
+        [1, 0,  0, x],
+        [0, c, -s, c*y - s*z],
+        [0, s,  c, s*y + c*z],
+        [0, 0,  0, 1]
+    ]
+
+def transform_y(theta, x, y, z):
+    c = math.cos(theta)
+    s = math.sin(theta)
+    return [
+        [ c, 0, s,  c*x + s*z],
+        [ 0, 1, 0,  y],
+        [-s, 0, c, -s*x + c*z],
+        [ 0, 0, 0,  1]
+    ]
+
+def transform_z(theta, x, y, z):
+    c = math.cos(theta)
+    s = math.sin(theta)
+    return [
+        [c, -s, 0, c*x - s*y],
+        [s,  c, 0, s*x + c*y],
+        [0,  0, 1, z],
+        [0,  0, 0, 1]
+    ]
+
+def matrix_multiply(A, B):
+
+    rows_A = len(A)
+    cols_A = len(A[0])
+    cols_B = len(B[0])
+
+    result = [
+        [0 for _ in range(cols_B)]
+        for _ in range(rows_A)
+    ]
+
+    for i in range(rows_A):
+        for j in range(cols_B):
+            for k in range(cols_A):
+
+                result[i][j] += A[i][k] * B[k][j]
+
+    return result
+
 
 TRANSFORM = {'x': transform_x, 'y': transform_y, 'z': transform_z}
 AXIS_VEC  = {'x': [1, 0, 0], 'y': [0, 1, 0], 'z': [0, 0, 1]}
