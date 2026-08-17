@@ -51,6 +51,19 @@ def matrix_multiply(A, B):
 
     return result
 
+def rotation_to_euler(T):
+    """회전행렬(T의 3x3)에서 roll, pitch, yaw 추출 (ZYX 오일러)"""
+    r00 = T[0][0]
+    r10 = T[1][0]
+    r20 = T[2][0]
+    r21 = T[2][1]
+    r22 = T[2][2]
+
+    pitch = math.atan2(-r20, math.sqrt(r00**2 + r10**2))
+    roll  = math.atan2(r21, r22)
+    yaw   = math.atan2(r10, r00)
+
+    return roll, pitch, yaw
 
 data = sys.stdin.read().split()
 
@@ -81,4 +94,6 @@ T = [
 for func, theta, x, y, z in joints:
     T = matrix_multiply(T, func(theta, x, y, z))
 
-print(f"{T[0][3]:.4f} {T[1][3]:.4f} {T[2][3]:.4f}")
+roll, pitch, yaw = rotation_to_euler(T)
+print(f"{T[0][3]:.4f} {T[1][3]:.4f} {T[2][3]:.4f}")           # 위치
+print(f"{math.degrees(roll):.4f} {math.degrees(pitch):.4f} {math.degrees(yaw):.4f}")  # 자세
